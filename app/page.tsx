@@ -151,7 +151,7 @@ function Hero() {
   }, [onScroll]);
 
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-6 overflow-hidden">
+    <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-6 pt-14 overflow-hidden">
       {/* Radial glow — parallax */}
       <div
         className="absolute inset-0 pointer-events-none"
