@@ -58,6 +58,17 @@ body {
 }
 .reveal-right.visible { opacity: 1; transform: translateX(0); }
 
+@media (max-width: 767px) {
+  .reveal-left,
+  .reveal-right {
+    transform: translateY(32px);
+  }
+  .reveal-left.visible,
+  .reveal-right.visible {
+    transform: translateY(0);
+  }
+}
+
 .reveal-scale {
   opacity: 0;
   transform: scale(0.92);

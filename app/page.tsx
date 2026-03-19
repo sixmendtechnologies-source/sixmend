@@ -104,9 +104,11 @@ function Nav() {
           ))}
         </nav>
 
-        <a href="#contact" className="hidden md:inline-flex btn-primary text-xs py-2 px-5">
-          Let&apos;s talk
-        </a>
+        <div className="hidden md:block">
+          <a href="#contact" className="btn-primary text-xs py-2 px-5">
+            Let&apos;s talk
+          </a>
+        </div>
 
         <button className="md:hidden text-white/60 hover:text-white" onClick={() => setOpen(!open)}>
           <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
