@@ -3,6 +3,87 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import Image from "next/image";
 
+// ─── Tech particle effect ─────────────────────────────────────────────
+const TECH_SYMBOLS = ["</>", "{}", "[]", "01", "#!", "=>", "&&", "||", "npm", "git", "://", "fn()", "0x", "===", ">>"];
+
+type TechParticle = {
+  x: number; y: number;
+  vx: number; vy: number;
+  alpha: number;
+  symbol: string;
+  size: number;
+  color: string;
+};
+
+function ParticleCanvas() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const particles = useRef<TechParticle[]>([]);
+  const raf = useRef<number>(0);
+  const lastEmit = useRef<number>(0);
+
+  useEffect(() => {
+    const canvas = canvasRef.current!;
+    const ctx = canvas.getContext("2d")!;
+
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    resize();
+    window.addEventListener("resize", resize);
+
+    const colors = ["rgba(96,165,250,", "rgba(167,139,250,", "rgba(52,211,153,", "rgba(255,255,255,"];
+
+    const onMove = (e: MouseEvent) => {
+      const now = Date.now();
+      if (now - lastEmit.current < 80) return;
+      lastEmit.current = now;
+
+      particles.current.push({
+        x: e.clientX + (Math.random() - 0.5) * 20,
+        y: e.clientY + (Math.random() - 0.5) * 10,
+        vx: (Math.random() - 0.5) * 1.2,
+        vy: -(Math.random() * 1.5 + 0.8),
+        alpha: 1,
+        symbol: TECH_SYMBOLS[Math.floor(Math.random() * TECH_SYMBOLS.length)],
+        size: Math.random() * 4 + 10,
+        color: colors[Math.floor(Math.random() * colors.length)],
+      });
+    };
+    window.addEventListener("mousemove", onMove);
+
+    const loop = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.current = particles.current.filter(p => p.alpha > 0.03);
+      for (const p of particles.current) {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.alpha *= 0.96;
+        ctx.globalAlpha = p.alpha;
+        ctx.font = `bold ${p.size}px 'Geist Mono', monospace`;
+        ctx.fillStyle = `${p.color}${p.alpha})`;
+        ctx.fillText(p.symbol, p.x, p.y);
+      }
+      ctx.globalAlpha = 1;
+      raf.current = requestAnimationFrame(loop);
+    };
+    loop();
+
+    return () => {
+      window.removeEventListener("resize", resize);
+      window.removeEventListener("mousemove", onMove);
+      cancelAnimationFrame(raf.current);
+    };
+  }, []);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{ position: "fixed", inset: 0, pointerEvents: "none", zIndex: 9998 }}
+    />
+  );
+}
+
 // ─── Scroll reveal hook ──────────────────────────────────────────────
 function useReveal(threshold = 0.15) {
   const ref = useRef<HTMLElement>(null);
@@ -92,16 +173,19 @@ function Nav() {
     >
       <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
         <a href="#" className="flex items-center gap-2">
-          <Image src="/logo.png" alt="Sixmend Technology" width={28} height={28} className="rounded-sm object-contain mt-1" style={{ display: "block" }} />
-          <span className="text-sm font-semibold text-white tracking-tight leading-none">sixmend</span>
+          <Image src="/logo.png" alt="Sixmend Technology" width={32} height={32} className="rounded-sm object-contain" style={{ display: "block" }} />
+          <span className="text-xl font-bold text-white tracking-widest leading-none uppercase" style={{ fontFamily: "var(--font-rajdhani)" }}>Sixmend</span>
         </a>
 
         <nav className="hidden md:flex items-center gap-7">
-          {["Services", "Process", "About", "Contact"].map((l) => (
+          {["Services", "Process", "About"].map((l) => (
             <a key={l} href={`#${l.toLowerCase()}`} className="text-sm text-white/50 hover:text-white transition-colors duration-200">
               {l}
             </a>
           ))}
+          <a href="/contact" className="text-sm text-white/50 hover:text-white transition-colors duration-200">
+            Contact
+          </a>
         </nav>
 
         <div className="hidden md:block">
@@ -521,8 +605,8 @@ function CTA() {
               Tell us about your project and we&apos;ll get back to you within one business day.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <a href="mailto:hello@sixmend.tech" className="btn-primary text-base py-3.5 px-8">
-                hello@sixmend.tech
+              <a href="mailto:sixmendtechnologies@gmail.com" className="btn-primary text-base py-3.5 px-8">
+                sixmendtechnologies@gmail.com
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                 </svg>
@@ -554,6 +638,7 @@ function Footer() {
 export default function Home() {
   return (
     <div className="grain">
+      <ParticleCanvas />
       <Nav />
       <main>
         <Hero />
