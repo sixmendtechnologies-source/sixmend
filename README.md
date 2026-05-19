@@ -2,6 +2,23 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
+### Local Development (with Docker)
+
+Run the development server with Docker:
+
+```bash
+docker-compose up
+```
+
+Or build and run manually:
+
+```bash
+docker build -t sixmend .
+docker run -p 3000:3000 sixmend
+```
+
+### Local Development (without Docker)
+
 First, run the development server:
 
 ```bash
@@ -28,6 +45,30 @@ To learn more about Next.js, take a look at the following resources:
 - [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
 You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+
+## Docker Setup
+
+### Development
+
+Run with hot reload and volume mounts:
+
+```bash
+docker-compose up
+```
+
+### Production
+
+Build and run the production image:
+
+```bash
+docker-compose -f docker-compose.prod.yml up
+```
+
+The production image includes:
+- Multi-stage build for optimized final image
+- Non-root user for security
+- Health checks enabled
+- Auto-restart policy
 
 ## Deploy on Vercel
 
