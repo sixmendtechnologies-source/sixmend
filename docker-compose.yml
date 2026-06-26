@@ -1,13 +1,18 @@
 version: '3.8'
-
 services:
   web:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: sixmend-app
-    ports:
-      - "3000:3000"
+    container_name: sixmend-app        # central nginx uses this name to reach Next.js
+    expose:
+      - "3000"                         # internal only — nginx-proxy handles 80/443
     environment:
       - NODE_ENV=production
     restart: unless-stopped
+    networks:
+      - proxy-net
+
+networks:
+  proxy-net:
+    external: true                     # shared network created on host
