@@ -64,6 +64,9 @@ export default function OgImage() {
         {/* Headline */}
         <div
           style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
             fontSize: '72px',
             fontWeight: 700,
             color: '#ffffff',
@@ -73,8 +76,7 @@ export default function OgImage() {
             marginBottom: '24px',
           }}
         >
-          We build software
-          <br />
+          <span>We build software</span>
           <span style={{ color: 'rgba(255,255,255,0.35)' }}>that ships.</span>
         </div>
 
