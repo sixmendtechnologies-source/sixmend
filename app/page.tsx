@@ -544,41 +544,109 @@ function Stats() {
   );
 }
 
-// ─── Testimonials ─────────────────────────────────────────────────────
-const TESTIMONIALS = [
-  { quote: "They moved our entire infra to AWS in 6 weeks without a single hour of downtime. The best engineering team we've worked with.", name: "Sarah Chen", role: "CTO · NovaTrade" },
-  { quote: "Their QA team caught critical regressions before they hit production. Coverage went from 40% to 91% in two months.", name: "Marcus Rivera", role: "VP Eng · FinVault" },
-  { quote: "The DevOps setup they built cut our deploy times from 40 minutes to under 4. Night and day difference.", name: "Priya Nair", role: "CEO · HealthBridge" },
+// ─── Products ─────────────────────────────────────────────────────────
+const PRODUCTS = [
+  {
+    name: "CookBy",
+    tag: "Meal subscription platform",
+    description: "Connects customers with local mess kitchens for daily meals — breakfast, lunch, and dinner. Subscribe, track menus, manage cancellations, and pay bills in-app.",
+    logo: "/cookby-logo.png",
+    logoW: 130, logoH: 40,
+    showName: false,
+    naturalColor: false,
+    href: "https://cookby.sixmend.com/",
+    accent: "from-amber-500/10 to-orange-500/5",
+    dot: "bg-amber-400",
+    glow: "rgba(251,191,36,0.5)",
+  },
+  {
+    name: "BillBook",
+    tag: "Workshop billing SaaS",
+    description: "Job card and invoice management for automobile service centers. Tracks vehicles, services, spare parts inventory, GST billing, and payments — built for Kerala workshops.",
+    logo: null,
+    logoW: 40, logoH: 40,
+    showName: true,
+    href: null,
+    naturalColor: false,
+    accent: "from-blue-500/10 to-cyan-500/5",
+    dot: "bg-blue-400",
+    glow: "rgba(96,165,250,0.5)",
+  },
+  {
+    name: "Stepney",
+    tag: "Roadside assistance app",
+    description: "On-demand roadside help for drivers — mechanics, puncture repair, towing, battery jump-starts, and electrical fixes. Connects drivers to verified technicians on a live map.",
+    logo: "/stepney-logo.png",
+    logoW: 140, logoH: 36,
+    showName: false,
+    naturalColor: false,
+    href: "https://stepney.sixmend.com/",
+    accent: "from-emerald-500/10 to-green-500/5",
+    dot: "bg-emerald-400",
+    glow: "rgba(52,211,153,0.5)",
+  },
 ];
 
-function Testimonials() {
+function Products() {
   return (
     <section id="about" className="border-t border-white/[0.06]">
       <div className="max-w-6xl mx-auto px-6 py-24">
         <R type="reveal" className="mb-4">
-          <p className="text-xs font-mono text-white/25 tracking-widest uppercase">Client stories</p>
+          <p className="text-xs font-mono text-white/25 tracking-widest uppercase">Our products</p>
         </R>
         <R type="reveal" delay="delay-1" className="mb-14">
           <h2 className="text-4xl md:text-5xl font-semibold text-white tracking-tight">
-            What clients say.
+            Built by us. Used daily.
           </h2>
         </R>
         <div className="grid md:grid-cols-3 gap-4">
-          {TESTIMONIALS.map((t, i) => (
-            <R key={t.name} type="reveal" delay={`delay-${i + 1}` as "delay-1" | "delay-2" | "delay-3"}>
-              <div className="feat-card card-glow p-7 h-full flex flex-col">
-                <div className="flex gap-0.5 mb-5">
-                  {Array.from({ length: 5 }).map((_, j) => (
-                    <svg key={j} className="w-3.5 h-3.5 text-white/40" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+          {PRODUCTS.map((p, i) => (
+            <R key={p.name} type="reveal" delay={`delay-${i + 1}` as "delay-1" | "delay-2" | "delay-3"}>
+              <div className={`feat-card card-glow p-7 h-full flex flex-col bg-gradient-to-br ${p.accent} ${p.href ? "cursor-pointer hover:border-white/20 transition-colors" : ""}`}
+                onClick={p.href ? () => window.open(p.href!, "_blank") : undefined}>
+                <div className="flex items-center gap-1 mb-6">
+                  {p.logo ? (
+                    <Image
+                      src={p.logo}
+                      alt={p.name}
+                      width={p.logoW}
+                      height={p.logoH}
+                      className="object-contain"
+                      style={{ maxHeight: p.logoH, filter: "brightness(0) invert(1)", opacity: 0.85 }}
+                    />
+                  ) : (
+                    <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <defs>
+                        <linearGradient id="bb-hex" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+                          <stop offset="0%" stopColor="#60a5fa" />
+                          <stop offset="100%" stopColor="#3b5fc0" />
+                        </linearGradient>
+                      </defs>
+                      <polygon points="50,4 93,27 93,73 50,96 7,73 7,27" stroke="url(#bb-hex)" strokeWidth="5" fill="none" strokeLinejoin="round" />
+                      {/* Spine */}
+                      <line x1="33" y1="28" x2="33" y2="72" stroke="url(#bb-hex)" strokeWidth="5" strokeLinecap="round" />
+                      {/* Top bump */}
+                      <path d="M33,28 H52 C63,28 68,33 68,39 C68,45 63,50 52,50 H33" stroke="url(#bb-hex)" strokeWidth="5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                      {/* Bottom bump */}
+                      <path d="M33,50 H54 C67,50 73,56 73,63 C73,70 67,72 54,72 H33" stroke="url(#bb-hex)" strokeWidth="5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
                     </svg>
-                  ))}
+                  )}
+                  {p.showName && (
+                    <span className="text-xl font-semibold text-white/85 tracking-tight">{p.name}</span>
+                  )}
                 </div>
-                <p className="text-sm text-white/50 leading-relaxed flex-1 mb-6">&ldquo;{t.quote}&rdquo;</p>
-                <div className="border-t border-white/[0.07] pt-5">
-                  <div className="text-sm font-medium text-white">{t.name}</div>
-                  <div className="text-xs text-white/30 mt-0.5">{t.role}</div>
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <span className={`w-1.5 h-1.5 rounded-full ${p.dot}`} style={{ boxShadow: `0 0 6px ${p.glow}` }} />
+                    <span className="text-xs text-white/30">{p.tag}</span>
+                  </div>
+                  {p.href && (
+                    <svg className="w-3.5 h-3.5 text-white/20" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                    </svg>
+                  )}
                 </div>
+                <p className="text-sm text-white/45 leading-relaxed flex-1">{p.description}</p>
               </div>
             </R>
           ))}
@@ -605,8 +673,8 @@ function CTA() {
               Tell us about your project and we&apos;ll get back to you within one business day.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <a href="mailto:sixmendtechnologies@gmail.com" className="btn-primary text-base py-3.5 px-8">
-                sixmendtechnologies@gmail.com
+              <a href="mailto:info@sixmend.com" className="btn-primary text-base py-3.5 px-8">
+                info@sixmend.com
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
                 </svg>
@@ -645,8 +713,7 @@ export default function Home() {
         <Marquee />
         <Services />
         <FeatureSection />
-        <Stats />
-        <Testimonials />
+        <Products />
         <CTA />
       </main>
       <Footer />
