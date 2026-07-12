@@ -1,12 +1,18 @@
 services:
-  web:
+  sixmend-landing:
     image: ${IMAGE}
-    container_name: sixmend-app
+    container_name: sixmend-web
     expose:
       - "3000"
+    restart: unless-stopped
     environment:
       - NODE_ENV=production
-    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://sixmend-web:3000/"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
     networks:
       - proxy-net
 

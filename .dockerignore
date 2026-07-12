@@ -19,3 +19,13 @@ coverage
 *~
 .turbo
 .vercel
+Dockerfile
+.dockerignore
+node_modules
+npm-debug.log
+README.md
+.next
+.git
+.gitignore
+.env*.local
+
