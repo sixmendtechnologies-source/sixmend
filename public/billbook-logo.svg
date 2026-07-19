@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- B + Book spine + Bill lines — minimal line art -->
+
+  <!-- Book spine (left vertical) -->
+  <line x1="156" y1="112" x2="156" y2="400" stroke="#2563EB" stroke-width="18" stroke-linecap="round"/>
+
+  <!-- Top cover -->
+  <line x1="156" y1="112" x2="356" y2="112" stroke="#2563EB" stroke-width="18" stroke-linecap="round"/>
+
+  <!-- Bottom cover -->
+  <line x1="156" y1="400" x2="356" y2="400" stroke="#2563EB" stroke-width="18" stroke-linecap="round"/>
+
+  <!-- Right edge -->
+  <line x1="356" y1="112" x2="356" y2="400" stroke="#2563EB" stroke-width="18" stroke-linecap="round"/>
+
+  <!-- Bill lines inside -->
+  <line x1="200" y1="180" x2="312" y2="180" stroke="#3B82F6" stroke-width="12" stroke-linecap="round"/>
+  <line x1="200" y1="230" x2="290" y2="230" stroke="#93C5FD" stroke-width="10" stroke-linecap="round"/>
+  <line x1="200" y1="275" x2="312" y2="275" stroke="#93C5FD" stroke-width="10" stroke-linecap="round"/>
+
+  <!-- Total line (bold) -->
+  <line x1="200" y1="332" x2="312" y2="332" stroke="#2563EB" stroke-width="12" stroke-linecap="round"/>
+
+  <!-- Rupee symbol hint — small tick -->
+  <polyline points="270,360 280,345 296,365" fill="none" stroke="#2563EB" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

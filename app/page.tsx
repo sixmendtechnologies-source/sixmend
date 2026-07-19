@@ -3,6 +3,49 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import Image from "next/image";
 
+// ─── 3D Tubes Background for Hero ────────────────────────────────────
+function HeroCanvas() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const script = document.createElement("script");
+    script.type = "module";
+    script.textContent = `
+      import TubesCursor from "https://cdn.jsdelivr.net/npm/threejs-components@0.0.19/build/cursors/tubes1.min.js";
+      const canvas = document.getElementById("hero-3d-canvas");
+      if (canvas) {
+        const t = new TubesCursor(canvas, {
+          colors: [0x0ea5e9, 0x2563eb, 0x60cfff, 0x1e40af],
+          lightIntensity: 50,
+        });
+        t.start();
+        window.__heroTubes = t;
+      }
+    `;
+    document.body.appendChild(script);
+
+    return () => {
+      script.remove();
+      const w = window as unknown as Record<string, { stop?: () => void }>;
+      if (w.__heroTubes) {
+        w.__heroTubes.stop?.();
+        delete (window as unknown as Record<string, unknown>).__heroTubes;
+      }
+    };
+  }, []);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      id="hero-3d-canvas"
+      className="hero-3d-canvas"
+    />
+  );
+}
+
 // ─── Tech particle effect ─────────────────────────────────────────────
 const TECH_SYMBOLS = ["</>", "{}", "[]", "01", "#!", "=>", "&&", "||", "npm", "git", "://", "fn()", "0x", "===", ">>"];
 
@@ -236,6 +279,9 @@ function Hero() {
 
   return (
     <section className="relative min-h-screen flex flex-col items-center justify-center text-center px-6 pt-14 overflow-hidden">
+      {/* 3D Tubes Background */}
+      <HeroCanvas />
+
       {/* Radial glow — parallax */}
       <div
         className="absolute inset-0 pointer-events-none"
@@ -246,16 +292,6 @@ function Hero() {
           style={{ background: "radial-gradient(circle, rgba(255,255,255,0.055) 0%, transparent 65%)" }}
         />
       </div>
-
-      {/* Grid */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          backgroundImage: "linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)",
-          backgroundSize: "72px 72px",
-          maskImage: "radial-gradient(ellipse 80% 70% at 50% 50%, black 30%, transparent 100%)",
-        }}
-      />
 
       <div className="relative z-10 max-w-5xl mx-auto">
         {/* Eyebrow pill */}
@@ -713,6 +749,7 @@ export default function Home() {
         <Marquee />
         <Services />
         <FeatureSection />
+        <Stats />
         <Products />
         <CTA />
       </main>
