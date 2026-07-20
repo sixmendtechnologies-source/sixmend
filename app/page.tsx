@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import Image from "next/image";
+import FeatureSection from "./components/FeatureSection";
 
 // ─── 3D Tubes Background for Hero ────────────────────────────────────
 function HeroCanvas() {
@@ -360,25 +361,6 @@ function Hero() {
   );
 }
 
-// ─── Marquee ─────────────────────────────────────────────────────────
-const STACK = ["TypeScript", "React", "Next.js", "Node.js", "Python", "Docker", "Kubernetes", "Terraform", "GitHub Actions", "AWS", "PostgreSQL", "Redis", "Playwright", "Jest", "Cypress"];
-
-function Marquee() {
-  const items = [...STACK, ...STACK];
-  return (
-    <div className="border-y border-white/[0.06] py-5 overflow-hidden">
-      <div className="marquee-track">
-        {items.map((t, i) => (
-          <div key={i} className="flex items-center gap-8 px-8">
-            <span className="text-sm font-mono text-white/25 whitespace-nowrap hover:text-white/60 transition-colors cursor-default">{t}</span>
-            <span className="text-white/10">·</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 // ─── Services ─────────────────────────────────────────────────────────
 const SERVICES = [
   {
@@ -464,113 +446,102 @@ function Services() {
   );
 }
 
-// ─── Feature sections (Apple-style alternating) ───────────────────────
-function FeatureSection() {
-  return (
-    <section id="process" className="border-t border-white/[0.06]">
-      {/* Row 1 */}
-      <div className="max-w-6xl mx-auto px-6 py-24 grid md:grid-cols-2 gap-16 items-center border-b border-white/[0.06]">
-        <R type="reveal-left">
-          <p className="text-xs font-mono text-white/25 tracking-widest uppercase mb-4">How we work</p>
-          <h2 className="text-3xl md:text-4xl font-semibold text-white tracking-tight leading-snug mb-5">
-            Code reviews. Test coverage. Real CI/CD.
-          </h2>
-          <p className="text-white/40 text-sm leading-relaxed mb-6">
-            We don&apos;t just write code and hand it over. Every project ships with documented CI pipelines, automated test suites, and a handover your team can actually maintain.
-          </p>
-          <ul className="space-y-3">
-            {["TypeScript by default", "90%+ test coverage targets", "Automated deploys on every merge", "Runbooks and docs included"].map((item) => (
-              <li key={item} className="flex items-center gap-3 text-sm text-white/50">
-                <svg className="w-4 h-4 text-white/20 flex-shrink-0" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-                </svg>
-                {item}
-              </li>
-            ))}
-          </ul>
-        </R>
-
-        <R type="reveal-right">
-          <div className="feat-card p-6">
-            <div className="flex items-center gap-2 mb-4 px-1">
-              <div className="w-2.5 h-2.5 rounded-full bg-red-500/60" />
-              <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/60" />
-              <div className="w-2.5 h-2.5 rounded-full bg-green-500/60" />
-              <span className="ml-2 text-xs font-mono text-white/20">pipeline.yml</span>
-            </div>
-            <pre className="text-xs font-mono leading-6 text-white/40 overflow-x-auto">
-{`on: [push]
-jobs:
-  ci:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - run: npm ci
-      - run: npm run lint
-      - run: npm run test
-      - run: npm run build
-      - uses: deploy-action@v2
-        if: github.ref == 'main'`}
-            </pre>
-          </div>
-        </R>
-      </div>
-
-      {/* Row 2 */}
-      <div className="max-w-6xl mx-auto px-6 py-24 grid md:grid-cols-2 gap-16 items-center">
-        <R type="reveal-left" className="order-2 md:order-1">
-          <div className="grid grid-cols-2 gap-3">
-            {[
-              { label: "Build", status: "passed", color: "text-green-400" },
-              { label: "Tests", status: "97% pass", color: "text-green-400" },
-              { label: "Coverage", status: "94%", color: "text-green-400" },
-              { label: "Deploy", status: "live", color: "text-blue-400" },
-              { label: "Uptime", status: "99.9%", color: "text-green-400" },
-              { label: "Incidents", status: "0 open", color: "text-white/40" },
-            ].map((m) => (
-              <div key={m.label} className="feat-card p-4">
-                <div className={`text-xs font-mono mb-1 ${m.color}`}>{m.status}</div>
-                <div className="text-xs text-white/30">{m.label}</div>
-              </div>
-            ))}
-          </div>
-        </R>
-
-        <R type="reveal-right" className="order-1 md:order-2">
-          <p className="text-xs font-mono text-white/25 tracking-widest uppercase mb-4">QA & Ops</p>
-          <h2 className="text-3xl md:text-4xl font-semibold text-white tracking-tight leading-snug mb-5">
-            Ship with confidence, not just speed.
-          </h2>
-          <p className="text-white/40 text-sm leading-relaxed mb-5">
-            Quality isn&apos;t a phase at the end — it&apos;s baked into every sprint. Our QA engineers work alongside developers, catching issues early when they&apos;re cheap to fix.
-          </p>
-          <p className="text-white/40 text-sm leading-relaxed">
-            And when things go sideways in prod, our DevOps and support teams are there to resolve them fast.
-          </p>
-        </R>
-      </div>
-    </section>
-  );
-}
-
 // ─── Stats ────────────────────────────────────────────────────────────
+const STAT_ITEMS = [
+  {
+    value: "12+",
+    label: "Years in IT",
+    icon: (
+      <svg viewBox="0 0 48 48" fill="none" className="w-11 h-11">
+        <circle cx="24" cy="26" r="14" stroke="#facc15" strokeWidth="2.5" fill="none" />
+        <path d="M24 18v8l5 3" stroke="#facc15" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M17 10l-3-4M31 10l3-4" stroke="#facc15" strokeWidth="2" strokeLinecap="round" />
+        <path d="M20 6h8" stroke="#facc15" strokeWidth="2" strokeLinecap="round" />
+        <circle cx="36" cy="13" r="1.5" fill="#fbbf24" />
+        <circle cx="12" cy="13" r="1.5" fill="#fbbf24" />
+      </svg>
+    ),
+    
+  },
+  {
+    value: "500+",
+    label: "Projects delivered",
+    icon: (
+      <svg viewBox="0 0 48 48" fill="none" className="w-11 h-11">
+        <rect x="6" y="10" width="36" height="28" rx="4" stroke="#60a5fa" strokeWidth="2.5" fill="none" />
+        <path d="M6 18h36" stroke="#60a5fa" strokeWidth="2" />
+        <circle cx="12" cy="14" r="1.5" fill="#60a5fa" />
+        <circle cx="18" cy="14" r="1.5" fill="#60a5fa" />
+        <circle cx="24" cy="14" r="1.5" fill="#60a5fa" />
+        <path d="M13 26l5 5 10-10" stroke="#34d399" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+    ),
+  },
+  {
+    value: "100+",
+    label: "Clients worldwide",
+    icon: (
+      <svg viewBox="0 0 48 48" fill="none" className="w-11 h-11">
+        <path d="M8 38c0-5.523 7.163-10 16-10s16 4.477 16 10" stroke="#f472b6" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+        <circle cx="24" cy="20" r="7" stroke="#f472b6" strokeWidth="2.5" fill="none" />
+        <path d="M36 14c2.5 1.2 4 3.5 4 6s-1.5 4.8-4 6" stroke="#f9a8d4" strokeWidth="2" strokeLinecap="round" fill="none" />
+        <path d="M12 14c-2.5 1.2-4 3.5-4 6s1.5 4.8 4 6" stroke="#f9a8d4" strokeWidth="2" strokeLinecap="round" fill="none" />
+      </svg>
+    ),
+  },
+  {
+    value: "99.9%",
+    label: "Average uptime",
+    icon: (
+      <svg viewBox="0 0 48 48" fill="none" className="w-11 h-11">
+        <rect x="8" y="30" width="6" height="10" rx="1.5" fill="#818cf8" />
+        <rect x="18" y="22" width="6" height="18" rx="1.5" fill="#818cf8" />
+        <rect x="28" y="14" width="6" height="26" rx="1.5" fill="#818cf8" />
+        <rect x="38" y="8" width="6" height="32" rx="1.5" fill="#a5b4fc" />
+        <path d="M10 20l8-6 10-4 10-5" stroke="#c7d2fe" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+        <circle cx="38" cy="8" r="2.5" fill="#e0e7ff" />
+      </svg>
+    ),
+  },
+  {
+    value: "24/7",
+    label: "Support coverage",
+    icon: (
+      <svg viewBox="0 0 48 48" fill="none" className="w-11 h-11">
+        <path d="M10 20c0-7.732 6.268-14 14-14s14 6.268 14 14v4c0 1.105.895 2 2 2h2v6h-4c-1.105 0-2-.895-2-2v-1" stroke="#34d399" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+        <path d="M10 26H8v-6h4c1.105 0 2 .895 2 2v4" stroke="#34d399" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+        <path d="M24 40c3 0 5-1.5 6-3H24" stroke="#34d399" strokeWidth="2.5" strokeLinecap="round" fill="none" />
+        <circle cx="24" cy="24" r="2" fill="#6ee7b7" />
+      </svg>
+    ),
+  },
+];
+
 function Stats() {
   return (
-    <section className="border-t border-white/[0.06]">
-      <div className="max-w-6xl mx-auto px-6 py-24">
-        <R type="reveal" className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-semibold text-white tracking-tight">
-            Numbers that speak.
-          </h2>
-        </R>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4">
-          {[
-            { value: "500+", label: "Projects delivered" },
-            { value: "99.9%", label: "Average uptime" },
-            { value: "12+", label: "Years in IT" },
-            { value: "24/7", label: "Support coverage" },
-          ].map((s, i) => (
-            <R key={s.label} type="reveal" delay={`delay-${i + 1}` as "delay-1" | "delay-2" | "delay-3" | "delay-4"} className="text-center md:text-left">
+    <section className="border-t border-white/[0.06] relative overflow-hidden">
+      <div
+        aria-hidden
+        className="absolute inset-0 flex items-center justify-center pointer-events-none select-none"
+      >
+        <span
+          className="font-black text-white/[0.04] whitespace-nowrap tracking-tighter leading-none"
+          style={{ fontSize: "clamp(72px, 17vw, 210px)" }}
+        >
+          SIXMEND
+        </span>
+      </div>
+
+      <div className="relative z-10 max-w-6xl mx-auto px-6 py-24">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-10 md:gap-6">
+          {STAT_ITEMS.map((s, i) => (
+            <R
+              key={s.label}
+              type="reveal"
+              delay={`delay-${i + 1}` as "delay-1" | "delay-2" | "delay-3" | "delay-4"}
+              className="flex flex-col items-center text-center"
+            >
+              <div className="mb-4">{s.icon}</div>
               <Counter value={s.value} label={s.label} />
             </R>
           ))}
@@ -847,10 +818,9 @@ export default function Home() {
       <Nav />
       <main>
         <Hero />
-        <Marquee />
+        <Stats />
         <Services />
         <FeatureSection />
-        <Stats />
         <Products />
         <CTA />
       </main>

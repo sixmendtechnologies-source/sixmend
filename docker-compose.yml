@@ -5,6 +5,8 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: sixmend-app        # central nginx uses this name to reach Next.js
+    ports:
+      - "3001:3000"                    # local access; expose kept for nginx-proxy on prod
     expose:
       - "3000"                         # internal only — nginx-proxy handles 80/443
     environment:

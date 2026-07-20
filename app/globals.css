@@ -188,3 +188,90 @@ canvas.hero-3d-canvas {
   height: 100% !important;
   z-index: 0;
 }
+
+/* ── Floating labels ── */
+@keyframes float-label {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-10px); }
+}
+.label-float-1 { animation: float-label 3.2s ease-in-out infinite; }
+.label-float-2 { animation: float-label 3.8s ease-in-out infinite 0.6s; }
+.label-float-3 { animation: float-label 3.5s ease-in-out infinite 1.1s; }
+.label-float-4 { animation: float-label 4.0s ease-in-out infinite 1.7s; }
+
+/* ── Blob scene ── */
+.blob-scene {
+  position: absolute;
+  inset: 0;
+  background: #02040e;
+  border-radius: 20px;
+  overflow: hidden;
+}
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(64px);
+  opacity: 0.75;
+  mix-blend-mode: screen;
+}
+.blob-purple {
+  width: 340px; height: 340px;
+  background: radial-gradient(circle at 40% 40%, #7c3aed 0%, #4f1d96 50%, transparent 75%);
+  top: 5%; left: 10%;
+  animation: blob-1 13s ease-in-out infinite;
+}
+.blob-red {
+  width: 280px; height: 280px;
+  background: radial-gradient(circle at 50% 50%, #ef4444 0%, #f97316 50%, transparent 75%);
+  top: 45%; left: 38%;
+  animation: blob-2 16s ease-in-out infinite;
+}
+.blob-teal {
+  width: 300px; height: 300px;
+  background: radial-gradient(circle at 60% 60%, #0ea5e9 0%, #06b6d4 50%, transparent 75%);
+  bottom: 8%; left: 2%;
+  animation: blob-3 11s ease-in-out infinite;
+}
+@keyframes blob-1 {
+  0%,100% { transform: translate(0,0) scale(1); }
+  25%      { transform: translate(44px,-36px) scale(1.06); }
+  50%      { transform: translate(18px,24px) scale(0.94); }
+  75%      { transform: translate(-28px,-12px) scale(1.03); }
+}
+@keyframes blob-2 {
+  0%,100% { transform: translate(0,0) scale(1); }
+  33%      { transform: translate(-52px,34px) scale(1.09); }
+  66%      { transform: translate(32px,-44px) scale(0.91); }
+}
+@keyframes blob-3 {
+  0%,100% { transform: translate(0,0) scale(1); }
+  40%      { transform: translate(58px,-22px) scale(1.1); }
+  80%      { transform: translate(-18px,32px) scale(0.94); }
+}
+
+/* ── Rocket idle bob ── */
+@keyframes rocket-bob {
+  0%, 100% { transform: translate(-50%, -50%) translateY(0px); }
+  50%       { transform: translate(-50%, -50%) translateY(-9px); }
+}
+.rocket-bob { animation: rocket-bob 2.8s ease-in-out infinite; }
+
+/* ── Reduced motion overrides ── */
+@media (prefers-reduced-motion: reduce) {
+  [class*="label-float"],
+  .rocket-bob { animation: none !important; }
+}
+
+/* ── Feature accordion ── */
+.feature-item {
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  transition: border-color 0.3s ease;
+}
+.feature-item:hover { border-color: rgba(255,255,255,0.14); }
+.feature-item-body {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.4s cubic-bezier(0.16,1,0.3,1);
+}
+.feature-item-body.open { grid-template-rows: 1fr; }
+.feature-item-body > div { overflow: hidden; }
