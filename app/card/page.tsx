@@ -11,7 +11,7 @@ const PERSON = {
   department: "Engineering",
   company: "Sixmend Technology",
   id: "SXM-AP-001",
-  email: "sixmendtechnologies@gmail.com",
+  email: "info@sixmend.com",
   website: "sixmend.com",
   phone: "+91 9995672270",
   issued: "Jan 2026",

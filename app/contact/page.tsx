@@ -15,8 +15,8 @@ export default function ContactPage() {
         <Link href="/" className="text-sm font-semibold text-white/70 hover:text-white transition-colors">
           ← sixmend
         </Link>
-        <a href="mailto:sixmendtechnologies@gmail.com" className="text-xs text-white/30 hover:text-white transition-colors font-mono">
-          sixmendtechnologies@gmail.com
+        <a href="mailto:info@sixmend.com" className="text-xs text-white/30 hover:text-white transition-colors font-mono">
+          info@sixmend.com
         </a>
       </header>
 
@@ -31,7 +31,7 @@ export default function ContactPage() {
           </p>
 
           <form
-            action="mailto:sixmendtechnologies@gmail.com"
+            action="mailto:info@sixmend.com"
             method="GET"
             encType="text/plain"
             className="space-y-4"
@@ -82,8 +82,8 @@ export default function ContactPage() {
 
           <p className="text-xs text-white/20 text-center mt-6">
             Prefer email?{" "}
-            <a href="mailto:sixmendtechnologies@gmail.com" className="text-white/40 hover:text-white transition-colors underline">
-              sixmendtechnologies@gmail.com
+            <a href="mailto:info@sixmend.com" className="text-white/40 hover:text-white transition-colors underline">
+              info@sixmend.com
             </a>
           </p>
         </div>

@@ -158,43 +158,14 @@ function R({ children, type = "reveal", delay = "", className = "" }: {
   );
 }
 
-// ─── Animated counter ────────────────────────────────────────────────
-function Counter({ value, label }: { value: string; label: string }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const started = useRef(false);
-  const [display, setDisplay] = useState("0");
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(([e]) => {
-      if (e.isIntersecting && !started.current) {
-        started.current = true;
-        const num = parseFloat(value.replace(/[^0-9.]/g, ""));
-        const suffix = value.replace(/[0-9.]/g, "");
-        const dur = 1800;
-        const step = num / (dur / 16);
-        let cur = 0;
-        const t = setInterval(() => {
-          cur = Math.min(cur + step, num);
-          setDisplay((Number.isInteger(num) ? Math.floor(cur) : cur.toFixed(1)) + suffix);
-          if (cur >= num) clearInterval(t);
-        }, 16);
-      }
-    }, { threshold: 0.5 });
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, [value]);
-
-  return (
-    <div ref={ref} className="reveal">
-      <div className="text-4xl md:text-5xl font-semibold text-white tracking-tight mb-1">{display}</div>
-      <div className="text-sm text-white/40">{label}</div>
-    </div>
-  );
-}
-
 // ─── Nav ─────────────────────────────────────────────────────────────
+const NAV_LINKS = [
+  { label: "Services", href: "/services" },
+  { label: "Process", href: "/#process" },
+  { label: "About", href: "/about" },
+  { label: "Contact", href: "/contact" },
+];
+
 function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
@@ -221,14 +192,11 @@ function Nav() {
         </a>
 
         <nav className="hidden md:flex items-center gap-7">
-          {["Services", "Process", "About"].map((l) => (
-            <a key={l} href={`#${l.toLowerCase()}`} className="text-sm text-white/50 hover:text-white transition-colors duration-200">
-              {l}
+          {NAV_LINKS.map((l) => (
+            <a key={l.label} href={l.href} className="text-sm text-white/50 hover:text-white transition-colors duration-200">
+              {l.label}
             </a>
           ))}
-          <a href="/contact" className="text-sm text-white/50 hover:text-white transition-colors duration-200">
-            Contact
-          </a>
         </nav>
 
         <div className="hidden md:block">
@@ -248,8 +216,8 @@ function Nav() {
 
       {open && (
         <div className="md:hidden border-t border-white/[0.08] bg-black/90 backdrop-blur-xl px-6 py-5 flex flex-col gap-5">
-          {["Services", "Process", "About", "Contact"].map((l) => (
-            <a key={l} href={`#${l.toLowerCase()}`} className="text-sm text-white/60 hover:text-white" onClick={() => setOpen(false)}>{l}</a>
+          {NAV_LINKS.map((l) => (
+            <a key={l.label} href={l.href} className="text-sm text-white/60 hover:text-white" onClick={() => setOpen(false)}>{l.label}</a>
           ))}
         </div>
       )}
@@ -311,7 +279,7 @@ function Hero() {
           Software development · QA · DevOps · IT support
         </p>
         <p className="hero-in-3 text-sm text-white/25 max-w-xl mx-auto leading-relaxed mb-12">
-          End-to-end technology delivery for startups and enterprises — from the first line of code to production and beyond.
+          Sixmend Technology is a software development and IT services company. We deliver custom web and mobile apps, QA, DevOps, and 24/7 IT support for startups and enterprises.
         </p>
 
         {/* CTAs */}
@@ -467,7 +435,7 @@ function Services() {
 // ─── Feature sections (Apple-style alternating) ───────────────────────
 function FeatureSection() {
   return (
-    <section id="process" className="border-t border-white/[0.06]">
+    <section id="engineering" className="border-t border-white/[0.06]">
       {/* Row 1 */}
       <div className="max-w-6xl mx-auto px-6 py-24 grid md:grid-cols-2 gap-16 items-center border-b border-white/[0.06]">
         <R type="reveal-left">
@@ -553,25 +521,68 @@ jobs:
   );
 }
 
-// ─── Stats ────────────────────────────────────────────────────────────
-function Stats() {
+// ─── Why Sixmend ──────────────────────────────────────────────────────
+const WHY = [
+  {
+    title: "Senior engineers only",
+    body: "No juniors learning on your budget. Every line is written and reviewed by experienced developers.",
+    icon: (
+      <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+      </svg>
+    ),
+  },
+  {
+    title: "Transparent process",
+    body: "Weekly demos, shared boards, and clear timelines. You always know exactly where your project stands.",
+    icon: (
+      <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+        <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+      </svg>
+    ),
+  },
+  {
+    title: "We build our own products",
+    body: "We run live SaaS and apps in production — so we know what it takes to ship and maintain real software.",
+    icon: (
+      <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M6.429 9.75L2.25 12l4.179 2.25m0-4.5l5.571 3 5.571-3m-11.142 0L2.25 7.5 12 2.25l9.75 5.25-4.179 2.25m0 0L21.75 12l-4.179 2.25m0 0l4.179 2.25L12 21.75 2.25 16.5l4.179-2.25m11.142 0l-5.571 3-5.571-3" />
+      </svg>
+    ),
+  },
+  {
+    title: "Ship in weeks, not months",
+    body: "Lean teams and real CI/CD mean you see working software fast — and keep shipping every single week.",
+    icon: (
+      <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+      </svg>
+    ),
+  },
+];
+
+function WhySixmend() {
   return (
     <section className="border-t border-white/[0.06]">
-      <div className="max-w-6xl mx-auto px-6 py-24">
-        <R type="reveal" className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-semibold text-white tracking-tight">
-            Numbers that speak.
+      <div className="max-w-6xl mx-auto px-6 py-28">
+        <R type="reveal" className="mb-4">
+          <p className="text-xs font-mono text-white/25 tracking-widest uppercase">Why Sixmend</p>
+        </R>
+        <R type="reveal" delay="delay-1" className="mb-16">
+          <h2 className="text-4xl md:text-5xl font-semibold text-white tracking-tight leading-tight max-w-xl">
+            Why teams choose us.
           </h2>
         </R>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-4">
-          {[
-            { value: "500+", label: "Projects delivered" },
-            { value: "99.9%", label: "Average uptime" },
-            { value: "12+", label: "Years in IT" },
-            { value: "24/7", label: "Support coverage" },
-          ].map((s, i) => (
-            <R key={s.label} type="reveal" delay={`delay-${i + 1}` as "delay-1" | "delay-2" | "delay-3" | "delay-4"} className="text-center md:text-left">
-              <Counter value={s.value} label={s.label} />
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {WHY.map((w, i) => (
+            <R key={w.title} type="reveal-scale" delay={`delay-${i + 1}` as "delay-1" | "delay-2" | "delay-3" | "delay-4"}>
+              <div className="feat-card card-glow p-7 h-full">
+                <div className="text-white/30 mb-5">{w.icon}</div>
+                <h3 className="text-base font-medium text-white mb-2.5">{w.title}</h3>
+                <p className="text-sm text-white/40 leading-relaxed">{w.body}</p>
+              </div>
             </R>
           ))}
         </div>
@@ -580,112 +591,107 @@ function Stats() {
   );
 }
 
-// ─── Products ─────────────────────────────────────────────────────────
-const PRODUCTS = [
-  {
-    name: "CookBy",
-    tag: "Meal subscription platform",
-    description: "Connects customers with local mess kitchens for daily meals — breakfast, lunch, and dinner. Subscribe, track menus, manage cancellations, and pay bills in-app.",
-    logo: "/cookby-logo.png",
-    logoW: 130, logoH: 40,
-    showName: false,
-    naturalColor: false,
-    href: "https://cookby.sixmend.com/",
-    accent: "from-amber-500/10 to-orange-500/5",
-    dot: "bg-amber-400",
-    glow: "rgba(251,191,36,0.5)",
-  },
-  {
-    name: "BillBook",
-    tag: "Workshop billing SaaS",
-    description: "Job card and invoice management for automobile service centers. Tracks vehicles, services, spare parts inventory, GST billing, and payments — built for Kerala workshops.",
-    logo: null,
-    logoW: 40, logoH: 40,
-    showName: true,
-    href: null,
-    naturalColor: false,
-    accent: "from-blue-500/10 to-cyan-500/5",
-    dot: "bg-blue-400",
-    glow: "rgba(96,165,250,0.5)",
-  },
-  {
-    name: "Stepney",
-    tag: "Roadside assistance app",
-    description: "On-demand roadside help for drivers — mechanics, puncture repair, towing, battery jump-starts, and electrical fixes. Connects drivers to verified technicians on a live map.",
-    logo: "/stepney-logo.png",
-    logoW: 140, logoH: 36,
-    showName: false,
-    naturalColor: false,
-    href: "https://stepney.sixmend.com/",
-    accent: "from-emerald-500/10 to-green-500/5",
-    dot: "bg-emerald-400",
-    glow: "rgba(52,211,153,0.5)",
-  },
+// ─── Process timeline ─────────────────────────────────────────────────
+const STEPS = [
+  { number: "01", title: "Discovery", body: "We dig into your goals, users, and constraints — then scope the project so there are no surprises later." },
+  { number: "02", title: "Design", body: "We shape the architecture and interface, agree on the plan, and lock a clear, realistic timeline." },
+  { number: "03", title: "Build & test", body: "We build in short cycles with automated tests and weekly demos, so you see real progress every week." },
+  { number: "04", title: "Ship & support", body: "We deploy to production with CI/CD, hand over clean docs, and keep things running with 24/7 support." },
 ];
 
-function Products() {
+function ProcessTimeline() {
   return (
-    <section id="about" className="border-t border-white/[0.06]">
-      <div className="max-w-6xl mx-auto px-6 py-24">
+    <section id="process" className="border-t border-white/[0.06]">
+      <div className="max-w-6xl mx-auto px-6 py-28">
         <R type="reveal" className="mb-4">
-          <p className="text-xs font-mono text-white/25 tracking-widest uppercase">Our products</p>
+          <p className="text-xs font-mono text-white/25 tracking-widest uppercase">How a project runs</p>
         </R>
-        <R type="reveal" delay="delay-1" className="mb-14">
-          <h2 className="text-4xl md:text-5xl font-semibold text-white tracking-tight">
-            Built by us. Used daily.
+        <R type="reveal" delay="delay-1" className="mb-16">
+          <h2 className="text-4xl md:text-5xl font-semibold text-white tracking-tight leading-tight max-w-xl">
+            From idea to production, in four steps.
           </h2>
         </R>
-        <div className="grid md:grid-cols-3 gap-4">
-          {PRODUCTS.map((p, i) => (
-            <R key={p.name} type="reveal" delay={`delay-${i + 1}` as "delay-1" | "delay-2" | "delay-3"}>
-              <div className={`feat-card card-glow p-7 h-full flex flex-col bg-gradient-to-br ${p.accent} ${p.href ? "cursor-pointer hover:border-white/20 transition-colors" : ""}`}
-                onClick={p.href ? () => window.open(p.href!, "_blank") : undefined}>
-                <div className="flex items-center gap-1 mb-6">
-                  {p.logo ? (
-                    <Image
-                      src={p.logo}
-                      alt={p.name}
-                      width={p.logoW}
-                      height={p.logoH}
-                      className="object-contain"
-                      style={{ maxHeight: p.logoH, filter: "brightness(0) invert(1)", opacity: 0.85 }}
-                    />
-                  ) : (
-                    <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <defs>
-                        <linearGradient id="bb-hex" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
-                          <stop offset="0%" stopColor="#60a5fa" />
-                          <stop offset="100%" stopColor="#3b5fc0" />
-                        </linearGradient>
-                      </defs>
-                      <polygon points="50,4 93,27 93,73 50,96 7,73 7,27" stroke="url(#bb-hex)" strokeWidth="5" fill="none" strokeLinejoin="round" />
-                      {/* Spine */}
-                      <line x1="33" y1="28" x2="33" y2="72" stroke="url(#bb-hex)" strokeWidth="5" strokeLinecap="round" />
-                      {/* Top bump */}
-                      <path d="M33,28 H52 C63,28 68,33 68,39 C68,45 63,50 52,50 H33" stroke="url(#bb-hex)" strokeWidth="5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-                      {/* Bottom bump */}
-                      <path d="M33,50 H54 C67,50 73,56 73,63 C73,70 67,72 54,72 H33" stroke="url(#bb-hex)" strokeWidth="5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                  )}
-                  {p.showName && (
-                    <span className="text-xl font-semibold text-white/85 tracking-tight">{p.name}</span>
-                  )}
+
+        <div className="grid md:grid-cols-4 gap-px bg-white/[0.06] rounded-2xl overflow-hidden">
+          {STEPS.map((s, i) => (
+            <R key={s.number} type="reveal" delay={`delay-${i + 1}` as "delay-1" | "delay-2" | "delay-3" | "delay-4"} className="h-full">
+              <div className="bg-black p-7 h-full flex flex-col">
+                <div className="flex items-center gap-3 mb-5">
+                  <span className="text-2xl font-semibold hero-gradient">{s.number}</span>
+                  <span className="flex-1 h-px bg-white/[0.08]" />
                 </div>
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex items-center gap-2">
-                    <span className={`w-1.5 h-1.5 rounded-full ${p.dot}`} style={{ boxShadow: `0 0 6px ${p.glow}` }} />
-                    <span className="text-xs text-white/30">{p.tag}</span>
-                  </div>
-                  {p.href && (
-                    <svg className="w-3.5 h-3.5 text-white/20" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
-                    </svg>
-                  )}
-                </div>
-                <p className="text-sm text-white/45 leading-relaxed flex-1">{p.description}</p>
+                <h3 className="text-lg font-medium text-white mb-2.5">{s.title}</h3>
+                <p className="text-sm text-white/40 leading-relaxed">{s.body}</p>
               </div>
             </R>
           ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ─── FAQ ──────────────────────────────────────────────────────────────
+const FAQS = [
+  {
+    q: "What services does Sixmend Technology offer?",
+    a: "Sixmend Technology offers end-to-end software development, QA & testing, DevOps & cloud infrastructure, and 24/7 IT support for startups and enterprises.",
+  },
+  {
+    q: "How do I start a project with Sixmend?",
+    a: "You can reach us at info@sixmend.com or via WhatsApp. We typically respond within one business day and will schedule a discovery call to understand your project requirements.",
+  },
+  {
+    q: "Does Sixmend offer 24/7 IT support?",
+    a: "Yes. Sixmend provides round-the-clock IT support with a 99.9% uptime SLA, available both remotely and on-site.",
+  },
+  {
+    q: "What technologies does Sixmend work with?",
+    a: "We work with TypeScript, React, Next.js, Node.js, Python, Docker, Kubernetes, Terraform, AWS, PostgreSQL, Redis, and more — across the full modern stack.",
+  },
+];
+
+function FAQ() {
+  const [open, setOpen] = useState<number | null>(0);
+  return (
+    <section id="faq" className="border-t border-white/[0.06]">
+      <div className="max-w-3xl mx-auto px-6 py-28">
+        <R type="reveal" className="mb-4">
+          <p className="text-xs font-mono text-white/25 tracking-widest uppercase">FAQ</p>
+        </R>
+        <R type="reveal" delay="delay-1" className="mb-14">
+          <h2 className="text-4xl md:text-5xl font-semibold text-white tracking-tight leading-tight">
+            Frequently asked.
+          </h2>
+        </R>
+
+        <div className="divide-y divide-white/[0.06] border-y border-white/[0.06]">
+          {FAQS.map((f, i) => {
+            const isOpen = open === i;
+            return (
+              <div key={f.q}>
+                <button
+                  onClick={() => setOpen(isOpen ? null : i)}
+                  className="w-full flex items-center justify-between gap-4 py-6 text-left group"
+                  aria-expanded={isOpen}
+                >
+                  <span className="text-base font-medium text-white/80 group-hover:text-white transition-colors">{f.q}</span>
+                  <svg
+                    className={`w-5 h-5 flex-shrink-0 text-white/30 transition-transform duration-300 ${isOpen ? "rotate-45" : ""}`}
+                    fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+                  </svg>
+                </button>
+                <div
+                  className="overflow-hidden transition-all duration-300 ease-out"
+                  style={{ maxHeight: isOpen ? 200 : 0, opacity: isOpen ? 1 : 0 }}
+                >
+                  <p className="text-sm text-white/45 leading-relaxed pb-6 pr-8">{f.a}</p>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>
@@ -830,9 +836,11 @@ function Footer() {
     <footer className="border-t border-white/[0.06] px-6 py-8">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
         <span className="text-sm font-semibold text-white/60">sixmend</span>
-        <span className="text-xs font-mono text-white/20 text-center">
-          Software · QA · DevOps · Support
-        </span>
+        <nav className="flex items-center gap-6 text-xs text-white/30">
+          <a href="/services" className="hover:text-white transition-colors">Services</a>
+          <a href="/about" className="hover:text-white transition-colors">About</a>
+          <a href="/contact" className="hover:text-white transition-colors">Contact</a>
+        </nav>
         <span className="text-xs text-white/20">© 2026 Sixmend Technology</span>
       </div>
     </footer>
@@ -849,9 +857,10 @@ export default function Home() {
         <Hero />
         <Marquee />
         <Services />
+        <WhySixmend />
+        <ProcessTimeline />
         <FeatureSection />
-        <Stats />
-        <Products />
+        <FAQ />
         <CTA />
       </main>
       <Footer />

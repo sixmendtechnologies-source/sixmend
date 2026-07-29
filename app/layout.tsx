@@ -47,7 +47,7 @@ const organizationSchema = {
   logo: "https://www.sixmend.com/logo.png",
   contactPoint: {
     "@type": "ContactPoint",
-    email: "sixmendtechnologies@gmail.com",
+    email: "info@sixmend.com",
     contactType: "customer support",
   },
   sameAs: [],
@@ -70,7 +70,7 @@ const faqSchema = {
       name: "How do I start a project with Sixmend?",
       acceptedAnswer: {
         "@type": "Answer",
-        text: "You can reach us at sixmendtechnologies@gmail.com. We typically respond within one business day and will schedule a discovery call to understand your project requirements.",
+        text: "You can reach us at info@sixmend.com. We typically respond within one business day and will schedule a discovery call to understand your project requirements.",
       },
     },
     {
@@ -100,10 +100,33 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${rajdhani.variable} h-full antialiased`}>
       <head>
+        {/* Google Tag Manager */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-T8CDCKX4');`,
+          }}
+        />
+        {/* End Google Tag Manager */}
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
       </head>
-      <body className="min-h-full bg-black text-[#ededed]">{children}</body>
+      <body className="min-h-full bg-black text-[#ededed]">
+        {/* Google Tag Manager (noscript) */}
+        <noscript>
+          <iframe
+            src="https://www.googletagmanager.com/ns.html?id=GTM-T8CDCKX4"
+            height="0"
+            width="0"
+            style={{ display: "none", visibility: "hidden" }}
+          />
+        </noscript>
+        {/* End Google Tag Manager (noscript) */}
+        {children}
+      </body>
     </html>
   );
 }
