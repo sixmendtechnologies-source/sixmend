@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 
 export const metadata: Metadata = {
   title: "About — Software Development & IT Services Company | Sixmend Technology",
@@ -17,9 +18,30 @@ export const metadata: Metadata = {
 };
 
 const PRODUCTS = [
-  { name: "CookBy", tag: "Meal subscription platform", note: "A meal-subscription app for local mess kitchens." },
-  { name: "BillBook", tag: "Workshop billing SaaS", note: "Billing and job-card software for service centers." },
-  { name: "Stepney", tag: "Roadside assistance app", note: "A live-map roadside-assistance app for drivers." },
+  {
+    name: "CookBy",
+    tag: "Meal subscription platform",
+    note: "A meal-subscription app for local mess kitchens.",
+    logo: "/cookby-logo.png",
+    href: "https://cookby.sixmend.com/",
+    square: false,
+  },
+  {
+    name: "MechBook",
+    tag: "Workshop billing SaaS",
+    note: "Billing and job-card software for automobile service centers.",
+    logo: "/mechbook-logo.png",
+    href: "https://mechbook.sixmend.com/",
+    square: true,
+  },
+  {
+    name: "Stepney",
+    tag: "Roadside assistance app",
+    note: "A live-map roadside-assistance app for drivers.",
+    logo: "/stepney-logo.png",
+    href: "https://stepney.sixmend.com/",
+    square: false,
+  },
 ];
 
 export default function AboutPage() {
@@ -59,11 +81,41 @@ export default function AboutPage() {
 
         <div className="grid sm:grid-cols-3 gap-3 mt-8">
           {PRODUCTS.map((p) => (
-            <div key={p.name} className="feat-card p-5">
+            <a
+              key={p.name}
+              href={p.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="feat-card p-5 flex flex-col hover:border-white/20 transition-colors group"
+            >
+              <div className="flex items-center justify-between mb-4">
+                {p.square ? (
+                  <Image
+                    src={p.logo}
+                    alt={p.name}
+                    width={36}
+                    height={36}
+                    className="rounded-lg object-contain"
+                    style={{ width: 36, height: 36 }}
+                  />
+                ) : (
+                  <Image
+                    src={p.logo}
+                    alt={p.name}
+                    width={110}
+                    height={28}
+                    className="object-contain"
+                    style={{ maxHeight: 24, width: "auto", filter: "brightness(0) invert(1)", opacity: 0.85 }}
+                  />
+                )}
+                <svg className="w-3.5 h-3.5 text-white/20 group-hover:text-white/50 transition-colors" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                </svg>
+              </div>
               <div className="text-sm font-semibold text-white/85 mb-1">{p.name}</div>
               <div className="text-xs text-white/30 mb-3">{p.tag}</div>
               <p className="text-xs text-white/40 leading-relaxed">{p.note}</p>
-            </div>
+            </a>
           ))}
         </div>
 
