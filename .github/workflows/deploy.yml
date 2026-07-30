@@ -11,6 +11,7 @@ env:
   ECR_REPOSITORY: frontend
   AWS_REGION: ap-south-1
   PROJECT_NAME: sixmend-web
+  CONTAINER_NAME: sixmend-web   # must match container_name in docker-compose.prod.yml
 
 jobs:
   lint-build:
@@ -60,7 +61,6 @@ jobs:
       - name: Resolve next version
         id: version
         run: |
-          # Filter tags belonging to this project only (e.g. sixmend-web-v1.1.2)
           LATEST=$(aws ecr describe-images \
             --repository-name ${{ env.ECR_REPOSITORY }} \
             --region ${{ env.AWS_REGION }} \
@@ -159,12 +159,13 @@ jobs:
           PREVIOUS_IMAGE: ${{ steps.images.outputs.previous_image }}
           NEW_TAG: ${{ needs.docker.outputs.new-tag }}
           PREVIOUS_TAG: ${{ needs.docker.outputs.previous-tag }}
+          CONTAINER_NAME: ${{ env.CONTAINER_NAME }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
-          envs: ECR_TOKEN,ECR_REGISTRY,IMAGE,PREVIOUS_IMAGE,NEW_TAG,PREVIOUS_TAG
+          envs: ECR_TOKEN,ECR_REGISTRY,IMAGE,PREVIOUS_IMAGE,NEW_TAG,PREVIOUS_TAG,CONTAINER_NAME
           script: |
             log() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*"; }
 
@@ -174,21 +175,25 @@ jobs:
 
             cd ~/sixmend
 
+            # Write .env so docker compose resolves IMAGE here and on the server
+            echo "IMAGE=$IMAGE" > .env
+            log ".env written with IMAGE=$IMAGE"
+
             log "Pulling $IMAGE ..."
-            if ! IMAGE=$IMAGE docker compose -f docker-compose.prod.yml pull; then
+            if ! docker compose -f docker-compose.prod.yml pull; then
               log "ERROR: Pull failed. Deployment aborted — server unchanged."
               exit 1
             fi
 
             log "Starting container..."
-            IMAGE=$IMAGE docker compose -f docker-compose.prod.yml up -d
+            docker compose -f docker-compose.prod.yml up -d
 
             # Poll Docker health status — up to 60s (12 × 5s)
             log "Waiting for container to become healthy..."
             RESULT="timeout"
             for i in $(seq 1 12); do
-              STATUS=$(docker inspect --format='{{.State.Status}}' sixmend-web 2>/dev/null || echo "missing")
-              HEALTH=$(docker inspect --format='{{.State.Health.Status}}' sixmend-web 2>/dev/null || echo "none")
+              STATUS=$(docker inspect --format='{{.State.Status}}' "$CONTAINER_NAME" 2>/dev/null || echo "missing")
+              HEALTH=$(docker inspect --format='{{.State.Health.Status}}' "$CONTAINER_NAME" 2>/dev/null || echo "none")
               log "[$i/12] status=$STATUS  health=$HEALTH"
               if [ "$STATUS" != "running" ]; then RESULT="crashed";   break; fi
               if [ "$HEALTH" = "healthy" ];   then RESULT="healthy";  break; fi
@@ -206,15 +211,17 @@ jobs:
             # ── ROLLBACK ─────────────────────────────────────────────────────
             log "ROLLBACK TRIGGERED — $NEW_TAG failed health check (result=$RESULT)"
             log "Last 50 lines from failed container:"
-            docker logs sixmend-web --tail 50 2>&1 | sed 's/^/  [container] /'
+            docker logs "$CONTAINER_NAME" --tail 50 2>&1 | sed 's/^/  [container] /'
 
             if [ -n "$PREVIOUS_IMAGE" ]; then
               log "Pulling $PREVIOUS_TAG from ECR..."
               docker pull "$PREVIOUS_IMAGE"
               log "Reverting to $PREVIOUS_TAG..."
-              IMAGE=$PREVIOUS_IMAGE docker compose -f docker-compose.prod.yml up -d
+              # Revert .env so server reflects the rolled-back image
+              echo "IMAGE=$PREVIOUS_IMAGE" > .env
+              docker compose -f docker-compose.prod.yml up -d
               sleep 5
-              RB_STATUS=$(docker inspect --format='{{.State.Status}}' sixmend-web 2>/dev/null || echo "missing")
+              RB_STATUS=$(docker inspect --format='{{.State.Status}}' "$CONTAINER_NAME" 2>/dev/null || echo "missing")
               log "Rollback container status: $RB_STATUS"
               log "ROLLBACK COMPLETE — site is serving $PREVIOUS_TAG"
             else

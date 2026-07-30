@@ -1,7 +1,7 @@
 services:
   sixmend-landing:
     image: ${IMAGE}
-    container_name: sixmend-app
+    container_name: sixmend-web
     expose:
       - "3000"
     restart: unless-stopped
